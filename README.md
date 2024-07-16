@@ -11,27 +11,46 @@ pyenv global 3.8.0
 ## Jenkins CI Pipeline Cmds:
 
 echo "#### Switch to python version 3.8.0 ####"
+
 pyenv versions
+
 pyenv global pypy3.8-7.3.11
+
 python -V
+
 
 echo "#### Create venv and activate it python version 3.8.0 ####"
+
 python -m venv flaskapp
+
 source flaskapp/bin/activate
 
+
 echo "##### Install required Python Modules ####"
+
 pip install -r requirements.txt
 
+
 echo "#### Install Code Coverage Modules ####"
+
 pip install coverage
+
 pip install pytest-cov
 
+
 echo "####Cobertura - Code Coverage####"
+
 pytest --cov=main --cov-report xml
 
+
 echo "#### Running Unit Test Cases ####"
+
 pytest utests --junitxml=./xmlReport/output.xml
 
+
 deactivate
+
 pyenv global system
+
 python -V
+
