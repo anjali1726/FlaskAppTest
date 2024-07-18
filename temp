@@ -11,7 +11,6 @@ echo "#### Create venv and activate it python version 3.8.0 ####"
 python -m venv 'flaskapp'
 source flaskapp/bin/activate'''
 
-source flaskapp/bin/activate
     }
     stage('Run Coverage Metrics') {
         echo "Run Coverage Metrics"
