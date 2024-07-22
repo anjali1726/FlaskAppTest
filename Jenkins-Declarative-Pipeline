@@ -32,5 +32,19 @@ pipeline {
         pip install pytest-cov'''
       }    
     }
+
+    stage('Running Coverage Metrics'){
+      steps{
+        sh returnStatus: true, script: '''echo \'#### Run Coverage Metrics ####\'
+        source flaskapp/bin/activate
+        pytest --cov=main --cov-report xml'''
+      }
+      post {
+        success {
+          // One or more steps need to be included within each condition's block.
+          cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
+        }
+      }
+    }
     }
 }
