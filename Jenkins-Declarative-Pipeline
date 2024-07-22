@@ -46,5 +46,19 @@ pipeline {
         }
       }
     }
+
+     stage('Running Unit Test Cases'){
+      steps{
+        sh returnStatus: true, script: '''echo \'#### Run Unit tests ####\'
+        source flaskapp/bin/activate
+        pytest utests --junitxml=./xmlReport/output.xml'''
+      }
+      post {
+        success {
+          // One or more steps need to be included within each condition's block.
+          junit skipMarkingBuildUnstable: true, stdioRetention: '', testResults: 'xmlReport/output.xml'
+        }
+      }
+    }
     }
 }
