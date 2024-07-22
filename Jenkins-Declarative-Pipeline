@@ -17,5 +17,20 @@ pipeline {
       		pyenv global pypy3.8-7.3.11'''
   	   }
   	}
+        stage('Py Venv Setup'){
+      steps{
+        sh '''echo "#### Create venv and activate it python version 3.8.0 ####"
+        python3 -m venv flaskapp
+        source flaskapp/bin/activate
+        python3 -V
+
+        echo "##### Install required Python Modules ####"
+        pip install -r requirements.txt
+
+        # Cobertura - Code Coverage
+        pip install coverage
+        pip install pytest-cov'''
+      }    
+    }
     }
 }
