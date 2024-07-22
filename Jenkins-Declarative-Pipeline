@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Get Source Code') {
             steps {
-                echo 'Hello World'
+                echo 'Cloning / pulling the latest code'
+		            git 'https://github.com/venkat09docs/FlaskAppUTest.git'
             }
         }
     }
