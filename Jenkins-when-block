@@ -4,20 +4,19 @@ pipeline {
     environment {
       REQ_PY = "3.10.0"
     }
-    
+
     stages {
         stage('Preparation') {
             steps {
                 echo "This is Preparation Stage"
                 echo "This is Required PY Version: ${env.REQ_PY}"
                 script{
-                  env.SYS_PY = sh(returnStdout: true, script: 'python3 -V | awk \'{print $2}\'').trim()
-                  echo "This is SYS PY Version: ${env.SYS_PY}"
+                    env.SYS_PY = sh(returnStdout: true, script: 'python -V | awk \'{print $2}\' | grep \'3.8\'').trim()
+                    echo "This is SYS PY Version: ${env.SYS_PY}"
                 }
             }
         }
-        // Python Version has to be 3.10.0
-        stage('Test PY Version 3.10') {
+        stage("Test PY Version 3.8"){
             when{
               expression { "${env.REQ_PY}" ==  "${env.SYS_PY}" }
             }
@@ -28,11 +27,5 @@ pipeline {
                 sh 'ls -l'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo "This is Deploy Stage"
-                echo "the Build Result is: ${currentBuild.currentResult}"
-            }
-        }        
     }
 }
