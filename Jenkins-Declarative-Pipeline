@@ -8,5 +8,14 @@ pipeline {
 		            git 'https://github.com/venkat09docs/FlaskAppUTest.git'
             }
         }
+        stage('Py Env Preparation'){
+  	   steps{
+      		sh '''#!/bin/bash
+      		source ~/.bashrc
+      		pyenv versions
+
+      		pyenv global 3.8.0'''
+  	   }
+  	}
     }
 }
