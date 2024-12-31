@@ -1,0 +1,62 @@
+pipeline {
+    agent {
+        label 'BuildServer'
+    }
+
+    stages {
+        stage('Pull the Code from Repo') {
+            steps {
+                echo 'Pulling the code from GitHub Repo'
+                git credentialsId: 'GitHub_Credentials', url: 'https://github.com/venkat09docs/FlaskAppTest.git'
+            }
+        }
+        stage('Setting PyEnv'){
+            steps {
+                echo "Setting Python Environment"
+                sh '''echo "#### Switch to python version 3.8.0 ####"
+                      pyenv versions
+                      pyenv global pypy3.8-7.3.11
+                      python -V'''
+            }
+        }
+        stage('Installing Python Modules'){
+            steps {
+                echo "Installing Python Modules"
+                sh '''echo "#### Create venv and activate it python version 3.8.0 ####"
+                    python -m venv flaskapp
+                    source flaskapp/bin/activate
+                    echo "##### Install required Python Modules ####"
+                    pip install -r requirements.txt
+                    echo "#### Install Code Coverage Modules ####"
+                    pip install coverage
+                    pip install pytest-cov'''
+            }
+        }
+        stage('Execute Coverage Metrics'){
+            steps{
+                sh '''echo "####Cobertura - Code Coverage####"
+                    source flaskapp/bin/activate
+                    pytest --cov=main --cov-report xml'''
+            }
+            post{
+                success{
+                    cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: '**/coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
+                }
+            }
+            
+        }
+        stage('Run Unit Test Cases'){
+            steps{
+                sh '''echo "#### Running Unit Test Cases ####"
+                    source flaskapp/bin/activate
+                    pytest utests --junitxml=./xmlReport/output.xml'''
+                    
+            }
+            post{
+                success{
+                    junit stdioRetention: '', testResults: '**/xmlReport/output.xml'
+                }
+            }
+        }
+    }
+}
