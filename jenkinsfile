@@ -22,5 +22,12 @@ pipeline {
                 //
             }
         }
+        stage('prod') {
+            steps {
+                echo "this is the prod stage"
+                echo "the current results is: ${currentBuild.currentResult}"
+                //
+            }
+        }
     }
 }
