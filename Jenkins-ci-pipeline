@@ -5,7 +5,7 @@ pipeline {
         stage('Get Source Code') {
             steps {
                 echo 'Cloning / pulling the latest code'
-		            git 'https://github.com/venkat09docs/FlaskAppUTest.git'
+		            git 'https://github.com/anjali1726/FlaskAppTest.git'
             }
         }
   	stage('Py Env Preparation'){
